@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de DFD - Prefeitura de São Carlos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bibliotecas para geração de DOCX no navegador -->
+    <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/imask@7.0.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; padding: 0 !important; }
+            .paper-preview {
+                margin: 0;
+                padding: 15mm;
+                width: 210mm;
+                min-height: 297mm;
+                box-shadow: none;
+                display: block !important;
+            }
+        }
+
+        .print-only { display: none; }
+
+        ::placeholder {
+            color: rgba(107, 114, 128, 0.5) !important;
+            font-style: italic;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Estilo do Documento para Impressão e Preview */
+        .paper-preview {
+            font-family: 'Arial', sans-serif;
+            color: black;
+            line-height: 1.4;
+            font-size: 11pt;
+            background: white;
+        }
+        .header-table {
+            width: 100%;
+            border: 1px solid #CCCCCC;
+            background-color: #E8EDF5;
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .section-title {
+            color: #1F3864;
+            font-weight: bold;
+            font-size: 12pt;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .justified { text-align: justify; }
+        .signature-line {
+            margin-top: 50px;
+            border-top: 1px solid black;
+            text-align: center;
+            padding-top: 5px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen pb-12">
+
+    <header class="bg-blue-900 text-white py-6 mb-8 no-print shadow-md">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-2 rounded-lg shadow-inner">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="#1e3a8a"/>
+                        <path d="M10 12H30M10 20H30M10 28H22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold leading-tight">DFD Digital</h1>
+                    <p class="text-blue-200 text-sm">Prefeitura Municipal de São Carlos</p>
+                </div>
+            </div>
+            <div class="hidden md:block text-right">
+                <p class="text-xs uppercase tracking-widest text-blue-300 font-semibold">Formalização de Demanda</p>
+                <p class="text-[10px] text-blue-400">Lei Federal nº 14.133/2021</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 max-w-4xl no-print">
+        <div class="form-card p-8">
+            <div class="mb-8 border-b pb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Dados da Demanda</h2>
+                <p class="text-gray-500 text-sm">Preencha as informações para gerar o documento oficial (DFD).</p>
+            </div>
+
+            <form id="dfdForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Órgão / Secretaria Requisitante</label>
+                        <input type="text" name="orgao" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: Secretaria Municipal de Educação">
+                    </div>
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Data de Elaboração</label>
+                        <input type="text" name="data_elaboracao" id="dataAtual" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="00/00/0000">
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">1. Descrição do Objeto</label>
+                        <textarea name="descricao_objeto" rows="3" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Descreva de forma clara o que se pretende contratar..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">2. Justificativa da Demanda</label>
+                        <textarea name="justificativa" rows="3" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Apresente a necessidade pública e os benefícios esperados..."></textarea>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">3. Fundamentação da Quantidade</label>
+                        <textarea name="fundamentacao_quantidade" rows="3" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Como a quantidade foi estimada? (Histórico, média, novos projetos...)"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">4. Requisitos Essenciais</label>
+                        <textarea name="requisitos" rows="3" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Equipes técnicas, materiais específicos, prazos críticos..."></textarea>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">5. Prioridade</label>
+                        <select name="prioridade" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Selecione...</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Média">Média</option>
+                            <option value="Baixa">Baixa</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">6. Prazo Estimado</label>
+                        <input type="text" name="prazo_data" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="00/00/0000">
+                    </div>
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ficha Orçamentária</label>
+                        <input type="text" name="ficha_orcamentaria" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: 123/2026">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Observações do Prazo</label>
+                    <input type="text" name="prazo_observacoes" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Contexto sobre a data limite (Ex: Início do ano letivo)">
+                </div>
+
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Fonte de Recurso</label>
+                    <input type="text" name="fonte_recurso" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: Tesouro Municipal / Federal / Convênio">
+                </div>
+
+                <div class="border-t pt-6">
+                    <div class="input-group max-w-md">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Responsável (Ordenador de Despesas)</label>
+                        <input type="text" name="nome_responsavel" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="NOME COMPLETO">
+                    </div>
+                    <div class="input-group max-w-md mt-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Secretário Municipal de (Área)</label>
+                        <input type="text" name="area_secretario" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ex: Educação, Saúde, Obras">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                    <button type="button" id="btnDownload" class="bg-blue-700 text-white font-bold py-4 rounded-xl hover:bg-blue-800 transition shadow-lg flex items-center justify-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <span id="btnDownloadText">Baixar Arquivo (.docx)</span>
+                    </button>
+                    <button type="button" id="btnPrint" class="bg-slate-700 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-lg flex items-center justify-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        <span id="btnPrintText">Imprimir / PDF</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Área de Impressão (Escondida na tela) -->
+    <div class="print-only">
+        <div class="paper-preview mx-auto" id="printSection"></div>
+    </div>
+
+    <script>
+        // ============= CONFIGURAÇÕES E UTILITÁRIOS =============
+        const CONFIG = {
+            COLORS: {
+                AZUL_PMC: "1F3864",
+                BG_HEADER: "E8EDF5",
+                CINZA_BORDA: "CCCCCC"
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Data atual automática
+            const dataInput = document.getElementById('dataAtual');
+            if (dataInput) {
+                dataInput.value = new Date().toLocaleDateString('pt-BR');
+            }
+
+            // Máscaras
+            const maskOptions = { mask: '00/00/0000', lazy: false };
+            document.querySelectorAll('input[name="data_elaboracao"], input[name="prazo_data"]')
+                .forEach(input => IMask(input, maskOptions));
+
+            // Eventos
+            document.getElementById('btnDownload').addEventListener('click', downloadDocx);
+            document.getElementById('btnPrint').addEventListener('click', generateAndPrint);
+        });
+
+        // ============= FUNÇÕES DE BIBLIOTECA DOCX =============
+        function getDocxRefs() {
+            // Tenta obter as referências da biblioteca de várias formas (compatibilidade de builds)
+            const d = window.docx || {};
+            return {
+                Document: window.Document || d.Document,
+                Packer: window.Packer || d.Packer,
+                Paragraph: window.Paragraph || d.Paragraph,
+                TextRun: window.TextRun || d.TextRun,
+                Table: window.Table || d.Table,
+                TableRow: window.TableRow || d.TableRow,
+                TableCell: window.TableCell || d.TableCell,
+                AlignmentType: window.AlignmentType || d.AlignmentType,
+                BorderStyle: window.BorderStyle || d.BorderStyle,
+                WidthType: window.WidthType || d.WidthType,
+            };
+        }
+
+        function getFormData() {
+            const form = document.getElementById('dfdForm');
+            const data = Object.fromEntries(new FormData(form).entries());
+            return data;
+        }
+
+        // ============= GERAÇÃO DOCX =============
+        async function downloadDocx() {
+            const btn = document.getElementById('btnDownload');
+            const btnText = document.getElementById('btnDownloadText');
+            const refs = getDocxRefs();
+            const d = getFormData();
+
+            if (!d.orgao || !d.descricao_objeto) {
+                alert("Por favor, preencha ao menos o Órgão e a Descrição do Objeto.");
+                return;
+            }
+
+            try {
+                btn.disabled = true;
+                btnText.textContent = 'Gerando...';
+
+                const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, AlignmentType, BorderStyle, WidthType } = refs;
+
+                const createSection = (title, text) => [
+                    new Paragraph({
+                        spacing: { before: 240 },
+                        children: [new TextRun({ text: title, bold: true, color: CONFIG.COLORS.AZUL_PMC, font: "Arial", size: 24 })]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 120 },
+                        children: [new TextRun({ text: text || "---", font: "Arial", size: 22 })]
+                    })
+                ];
+
+                const doc = new Document({
+                    sections: [{
+                        properties: { page: { margin: { top: 1134, right: 1134, bottom: 1134, left: 1134 } } },
+                        children: [
+                            new Table({
+                                width: { size: 100, type: WidthType.PERCENTAGE },
+                                rows: [new TableRow({
+                                    children: [new TableCell({
+                                        shading: { fill: CONFIG.COLORS.BG_HEADER },
+                                        borders: { 
+                                            top: { style: BorderStyle.SINGLE, color: CONFIG.COLORS.CINZA_BORDA },
+                                            bottom: { style: BorderStyle.SINGLE, color: CONFIG.COLORS.CINZA_BORDA },
+                                            left: { style: BorderStyle.SINGLE, color: CONFIG.COLORS.CINZA_BORDA },
+                                            right: { style: BorderStyle.SINGLE, color: CONFIG.COLORS.CINZA_BORDA }
+                                        },
+                                        children: [new Paragraph({
+                                            alignment: AlignmentType.CENTER,
+                                            children: [
+                                                new TextRun({ text: "ÓRGÃO: ", bold: true, font: "Arial", size: 22 }),
+                                                new TextRun({ text: d.orgao.toUpperCase(), bold: true, font: "Arial", size: 22 })
+                                            ]
+                                        })]
+                                    })]
+                                })]
+                            }),
+                            new Paragraph({
+                                alignment: AlignmentType.CENTER,
+                                spacing: { before: 400, after: 100 },
+                                children: [new TextRun({ text: "DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA", bold: true, font: "Arial", size: 28, underline: {} })]
+                            }),
+                            new Paragraph({
+                                alignment: AlignmentType.CENTER,
+                                spacing: { after: 400 },
+                                children: [new TextRun({ text: `DATA DE ELABORAÇÃO: ${d.data_elaboracao}`, bold: true, font: "Arial", size: 22 })]
+                            }),
+                            new Paragraph({
+                                alignment: AlignmentType.JUSTIFIED,
+                                spacing: { after: 300 },
+                                children: [new TextRun({ 
+                                    text: "Conforme disposto no Art. 12, inciso VII, da Lei Federal nº. 14.133/2021, e no Art. 7º do Decreto Municipal nº. 872/2024, as contratações públicas devem ser precedidas de Documento de Formalização da Demanda (DFD).",
+                                    font: "Arial", size: 22 
+                                })]
+                            }),
+                            ...createSection("1 – DESCRIÇÃO DO OBJETO", d.descricao_objeto),
+                            ...createSection("2 – JUSTIFICATIVA DA DEMANDA", d.justificativa),
+                            ...createSection("3 – FUNDAMENTAÇÃO DA QUANTIDADE", d.fundamentacao_quantidade),
+                            ...createSection("4 – REQUISITOS ESSENCIAIS DA CONTRATAÇÃO", d.requisitos),
+                            ...createSection("5 – GRAU DE PRIORIDADE DA CONTRATAÇÃO", d.prioridade),
+                            
+                            new Paragraph({
+                                spacing: { before: 200 },
+                                children: [new TextRun({ text: "6 – PRAZO NECESSÁRIO PARA ATENDIMENTO", bold: true, color: CONFIG.COLORS.AZUL_PMC, font: "Arial", size: 24 })]
+                            }),
+                            new Paragraph({ children: [
+                                new TextRun({ text: "Data limite: ", bold: true, font: "Arial", size: 22 }),
+                                new TextRun({ text: d.prazo_data || "---", font: "Arial", size: 22 })
+                            ]}),
+                            new Paragraph({ spacing: { after: 200 }, children: [
+                                new TextRun({ text: "Obs: ", bold: true, font: "Arial", size: 22 }),
+                                new TextRun({ text: d.prazo_observacoes || "---", font: "Arial", size: 22 })
+                            ]}),
+
+                            new Paragraph({
+                                children: [new TextRun({ text: "7 – DOTAÇÃO ORÇAMENTÁRIA", bold: true, color: CONFIG.COLORS.AZUL_PMC, font: "Arial", size: 24 })]
+                            }),
+                            new Paragraph({ children: [
+                                new TextRun({ text: "Ficha: ", bold: true, font: "Arial", size: 22 }),
+                                new TextRun({ text: d.ficha_orcamentaria || "---", font: "Arial", size: 22 })
+                            ]}),
+                            new Paragraph({ spacing: { after: 800 }, children: [
+                                new TextRun({ text: "Fonte: ", bold: true, font: "Arial", size: 22 }),
+                                new TextRun({ text: d.fonte_recurso || "---", font: "Arial", size: 22 })
+                            ]}),
+
+                            new Paragraph({
+                                alignment: AlignmentType.CENTER,
+                                border: { top: { style: BorderStyle.SINGLE, size: 6, color: "000000" } },
+                                spacing: { before: 200 },
+                                children: [
+                                    new TextRun({ text: (d.nome_responsavel || "NOME DO RESPONSÁVEL").toUpperCase(), bold: true, size: 22 }),
+                                    new TextRun({ text: "\nSecretário Municipal de " + (d.area_secretario || "[ÁREA]").toUpperCase(), size: 22, break: 1 })
+                                ]
+                            })
+                        ]
+                    }]
+                });
+
+                const blob = await Packer.toBlob(doc);
+                saveAs(blob, `DFD_${d.orgao.substring(0,20).replace(/\s/g, '_')}.docx`);
+
+            } catch (err) {
+                console.error(err);
+                alert("Erro ao gerar arquivo. Detalhes no console.");
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Baixar Arquivo (.docx)';
+            }
+        }
+
+        // ============= IMPRESSÃO / PDF =============
+        function generateAndPrint() {
+            const d = getFormData();
+            const container = document.getElementById('printSection');
+            
+            container.innerHTML = `
+                <div class="header-table">
+                    ÓRGÃO: ${d.orgao.toUpperCase() || '---'}
+                </div>
+                
+                <h2 style="text-align: center; text-decoration: underline; font-weight: bold; font-size: 14pt; margin-bottom: 5px;">
+                    DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA
+                </h2>
+                <p style="text-align: center; text-decoration: underline; font-weight: bold; margin-bottom: 20px;">
+                    DATA DE ELABORAÇÃO: ${d.data_elaboracao}
+                </p>
+
+                <p class="justified" style="margin-bottom: 20px;">
+                    Conforme disposto no Art. 12, inciso VII, da Lei Federal nº. 14.133/2021, e no Art. 7º do Decreto Municipal nº. 872/2024, as contratações públicas devem ser precedidas de Documento de Formalização da Demanda (DFD).
+                </p>
+
+                <div class="section-title">1 – Descrição do Objeto</div>
+                <p class="justified">${d.descricao_objeto || '---'}</p>
+
+                <div class="section-title">2 – Justificativa da Demanda</div>
+                <p class="justified">${d.justificativa || '---'}</p>
+
+                <div class="section-title">3 – Fundamentação da Quantidade</div>
+                <p class="justified">${d.fundamentacao_quantidade || '---'}</p>
+
+                <div class="section-title">4 – Requisitos Essenciais</div>
+                <p class="justified">${d.requisitos || '---'}</p>
+
+                <div class="section-title">5 – Grau de Prioridade</div>
+                <p>${d.prioridade || '---'}</p>
+
+                <div class="section-title">6 – Prazo Necessário</div>
+                <p><strong>Data limite:</strong> ${d.prazo_data || '---'}</p>
+                <p><strong>Observações:</strong> ${d.prazo_observacoes || '---'}</p>
+
+                <div class="section-title">7 – Dotação Orçamentária</div>
+                <p><strong>Ficha:</strong> ${d.ficha_orcamentaria || '---'}</p>
+                <p><strong>Fonte:</strong> ${d.fonte_recurso || '---'}</p>
+
+                <div class="signature-line" style="margin-top: 80px;">
+                    <strong>${(d.nome_responsavel || 'NOME DO RESPONSÁVEL').toUpperCase()}</strong><br>
+                    Secretário Municipal de ${(d.area_secretario || '[ÁREA]').toUpperCase()}
+                </div>
+            `;
+
+            window.print();
+        }
+    </script>
+</body>
+</html>
