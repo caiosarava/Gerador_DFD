@@ -32,7 +32,12 @@ export async function generateDOCX(data: DFDFormData): Promise<Blob> {
           spacing: { after: 120 },
         }),
         new Paragraph({
-          text: 'ESTADO DE SÃO PAULO',
+          text: 'São Carlos, capital da tecnologia',
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 120 },
+        }),
+        new Paragraph({
+          text: `Secretaria Municipal de ${data.nomeSecretariaCabecalho || ''}`,
           alignment: AlignmentType.CENTER,
           spacing: { after: 240 },
         }),

@@ -104,7 +104,10 @@ export function DFDPreview({ data, isOpen, onClose }: DFDPreviewProps) {
               </div>
             </div>
             <h1 className="text-lg font-bold text-slate-900">PREFEITURA MUNICIPAL DE SÃO CARLOS</h1>
-            <p className="text-sm text-slate-600">ESTADO DE SÃO PAULO</p>
+            <p className="text-sm text-slate-600">São Carlos, capital da tecnologia</p>
+            <p className="text-sm font-semibold text-slate-900 mt-2">
+              Secretaria Municipal de {data.nomeSecretariaCabecalho || '_____________'}
+            </p>
             <div className="mt-4 pt-4 border-t border-slate-300">
               <h2 className="text-base font-bold text-slate-900 uppercase">
                 Documento de Formalização de Demanda (DFD)

@@ -110,13 +110,14 @@ export function DFDForm({ onPreview }: DFDFormProps) {
   const StatusIcon = progressStatus.icon;
 
   // Agrupar campos por seção
-  const infoBasicaFields = formSections.slice(0, 6);
-  const descricaoFields = formSections.slice(6, 7);
-  const justificativaFields = formSections.slice(7, 8);
-  const fundamentacaoFields = formSections.slice(8, 9);
-  const requisitosFields = formSections.slice(9, 10);
-  const prioridadeFields = formSections.slice(10, 13);
-  const dotacaoFields = formSections.slice(13, 16);
+  const cabecalhoFields = formSections.slice(0, 1);
+  const infoBasicaFields = formSections.slice(1, 8);
+  const descricaoFields = formSections.slice(8, 9);
+  const justificativaFields = formSections.slice(9, 10);
+  const fundamentacaoFields = formSections.slice(10, 11);
+  const requisitosFields = formSections.slice(11, 12);
+  const prioridadeFields = formSections.slice(12, 15);
+  const dotacaoFields = formSections.slice(15, 19);
 
   const renderField = (section: typeof formSections[0]) => {
     const value = formData[section.id];
@@ -277,6 +278,24 @@ export function DFDForm({ onPreview }: DFDFormProps) {
           )}
         </Button>
       </div>
+
+      {/* Cabeçalho do Documento */}
+      <Card className="border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
+        <CardHeader className="bg-slate-100 border-b border-slate-200">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-slate-200 rounded-lg">
+              <Building2 className="h-5 w-5 text-slate-700" />
+            </div>
+            <div>
+              <CardTitle className="text-lg text-slate-800">Cabeçalho do Documento</CardTitle>
+              <CardDescription>Configure o cabeçalho que aparecerá no documento</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6 grid grid-cols-1 gap-6">
+          {cabecalhoFields.map(renderField)}
+        </CardContent>
+      </Card>
 
       {/* Seção 1: Informações Básicas */}
       <Card className="border-slate-200">

@@ -1,6 +1,9 @@
 // Tipos para o Documento de Formalização de Demanda (DFD)
 
 export interface DFDFormData {
+  // Cabeçalho do Documento
+  nomeSecretariaCabecalho: string;
+
   // Informações básicas
   numeroDFD: string;
   data: string;
@@ -32,6 +35,7 @@ export interface DFDFormData {
   // Seção 7: Dotação Orçamentária
   dotacaoOrcamentaria: string;
   valorEstimado: string;
+  nomeOrdenadorDespesa: string;
   fonteRecurso: string;
 }
 
@@ -48,6 +52,15 @@ export interface FormSection {
 }
 
 export const formSections: FormSection[] = [
+  {
+    id: 'nomeSecretariaCabecalho',
+    label: 'Secretaria Municipal de',
+    placeholder: 'Ex: Educação, Saúde, etc.',
+    helpText: 'Nome da secretaria que aparecerá no cabeçalho do documento',
+    example: 'Educação',
+    required: true,
+    type: 'text'
+  },
   {
     id: 'numeroDFD',
     label: 'Número do DFD',
@@ -199,6 +212,15 @@ export const formSections: FormSection[] = [
     type: 'text'
   },
   {
+    id: 'nomeOrdenadorDespesa',
+    label: 'Nome do Ordenador de Despesa',
+    placeholder: 'Ex: Dr. João Silva',
+    helpText: 'Nome completo do ordenador de despesa para assinatura do documento.',
+    example: 'Dr. João Silva Santos',
+    required: true,
+    type: 'text'
+  },
+  {
     id: 'fonteRecurso',
     label: 'Fonte de Recurso',
     placeholder: 'Ex: Recursos Ordinários, Emenda Parlamentar...',
@@ -210,6 +232,7 @@ export const formSections: FormSection[] = [
 ];
 
 export const initialFormData: DFDFormData = {
+  nomeSecretariaCabecalho: '',
   numeroDFD: '',
   data: '',
   secretaria: '',
@@ -217,6 +240,7 @@ export const initialFormData: DFDFormData = {
   responsavel: '',
   telefone: '',
   email: '',
+  nomeOrdenadorDespesa: '',
   descricaoObjeto: '',
   justificativaDemanda: '',
   fundamentacaoQuantidade: '',
@@ -230,6 +254,7 @@ export const initialFormData: DFDFormData = {
 };
 
 export const exampleData: DFDFormData = {
+  nomeSecretariaCabecalho: 'Educação',
   numeroDFD: '001/2024',
   data: '2024-03-15',
   secretaria: 'Secretaria Municipal de Educação',
@@ -245,6 +270,7 @@ export const exampleData: DFDFormData = {
   prazoNecessario: '2024-06-30',
   prazoObservacao: 'A entrega deve ser realizada em até 30 dias úteis após a formalização do contrato, sendo imprescindível para atender às metas do planejamento estratégico do órgão para o exercício de 2024.',
   dotacaoOrcamentaria: '12.01.01.122.0001.2.001.3.3.90.30',
+  nomeOrdenadorDespesa: 'Dr. João Silva Santos',
   valorEstimado: '150.000,00',
   fonteRecurso: 'Recursos Ordinários do Município'
 };
