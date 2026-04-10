@@ -154,7 +154,7 @@ function App() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <p className="text-sm font-semibold">Prefeitura Municipal de São Carlos</p>
-              <p className="text-xs text-slate-400">Rua Episcopal, 100 - Centro - São Carlos/SP - CEP: 13560-570</p>
+              <p className="text-xs text-slate-400">Rua Episcopal, 1575 - Centro - São Carlos/SP - CEP: 13560-570</p>
             </div>
             <div className="text-center md:text-right text-xs text-slate-400">
               <p>Sistema DFD - Documento de Formalização de Demanda</p>

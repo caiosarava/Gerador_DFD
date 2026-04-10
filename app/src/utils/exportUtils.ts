@@ -26,204 +26,261 @@ export async function generateDOCX(data: DFDFormData): Promise<Blob> {
       children: [
         // Cabeçalho
         new Paragraph({
-          text: 'PREFEITURA MUNICIPAL DE SÃO CARLOS',
-          heading: HeadingLevel.HEADING_1,
+          children: [
+            new TextRun({
+              text: 'PREFEITURA MUNICIPAL DE SÃO CARLOS',
+              bold: true,
+              size: 28, // 14pt = 28 half-points
+              font: 'Arial',
+              color: '000000',
+            }),
+          ],
           alignment: AlignmentType.CENTER,
           spacing: { after: 120 },
         }),
         new Paragraph({
-          text: 'São Carlos, capital da tecnologia',
+          children: [
+            new TextRun({
+              text: 'São Carlos, capital da tecnologia',
+              size: 24, // 12pt
+              font: 'Arial',
+              color: '000000',
+            }),
+          ],
           alignment: AlignmentType.CENTER,
           spacing: { after: 120 },
         }),
         new Paragraph({
-          text: `Secretaria Municipal de ${data.nomeSecretariaCabecalho || ''}`,
+          children: [
+            new TextRun({
+              text: `Secretaria Municipal de ${data.nomeSecretariaCabecalho || ''}`,
+              size: 24, // 12pt
+              font: 'Arial',
+              color: '000000',
+            }),
+          ],
           alignment: AlignmentType.CENTER,
           spacing: { after: 240 },
         }),
         new Paragraph({
-          text: 'DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA (DFD)',
-          heading: HeadingLevel.HEADING_1,
+          children: [
+            new TextRun({
+              text: 'DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA (DFD)',
+              bold: true,
+              size: 26, // 13pt
+              font: 'Arial',
+              color: '000000',
+            }),
+          ],
           alignment: AlignmentType.CENTER,
           spacing: { after: 240 },
           border: {
-            bottom: {
-              color: '000000',
-              space: 1,
-              style: BorderStyle.SINGLE,
-              size: 6,
-            },
-          },
         }),
 
         // Informações básicas
         new Paragraph({
           children: [
-            new TextRun({ text: 'Nº DFD: ', bold: true }),
-            new TextRun(data.numeroDFD || '__________'),
+            new TextRun({ text: 'Nº DFD: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.numeroDFD || '__________', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Data: ', bold: true }),
-            new TextRun(formatDateBR(data.data) || '__________'),
+            new TextRun({ text: 'Data: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: formatDateBR(data.data) || '__________', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Secretaria/Órgão: ', bold: true }),
-            new TextRun(data.secretaria || '__________'),
+            new TextRun({ text: 'Secretaria/Órgão: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.secretaria || '__________', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Departamento/Setor: ', bold: true }),
-            new TextRun(data.departamento || '__________'),
+            new TextRun({ text: 'Departamento/Setor: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.departamento || '__________', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Responsável: ', bold: true }),
-            new TextRun(data.responsavel || '__________'),
+            new TextRun({ text: 'Responsável: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.responsavel || '__________', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Telefone: ', bold: true }),
-            new TextRun(data.telefone || '__________'),
+            new TextRun({ text: 'Telefone: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.telefone || '__________', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'E-mail: ', bold: true }),
-            new TextRun(data.email || '__________'),
+            new TextRun({ text: 'E-mail: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.email || '__________', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 240 },
         }),
 
         // Seção 1
         new Paragraph({
-          text: '1. DESCRIÇÃO DO OBJETO',
-          heading: HeadingLevel.HEADING_2,
+          children: [
+            new TextRun({ text: '1. DESCRIÇÃO DO OBJETO', bold: true, font: 'Arial', color: '000000' }),
+          ],
           spacing: { before: 240, after: 120 },
         }),
         new Paragraph({
-          text: data.descricaoObjeto || 'Não informado',
+          children: [
+            new TextRun({ text: data.descricaoObjeto || 'Não informado', font: 'Arial', color: '000000' }),
+          ],
           spacing: { after: 240 },
         }),
 
         // Seção 2
         new Paragraph({
-          text: '2. JUSTIFICATIVA DA DEMANDA',
-          heading: HeadingLevel.HEADING_2,
+          children: [
+            new TextRun({ text: '2. JUSTIFICATIVA DA DEMANDA', bold: true, font: 'Arial', color: '000000' }),
+          ],
           spacing: { before: 240, after: 120 },
         }),
         new Paragraph({
-          text: data.justificativaDemanda || 'Não informado',
+          children: [
+            new TextRun({ text: data.justificativaDemanda || 'Não informado', font: 'Arial', color: '000000' }),
+          ],
           spacing: { after: 240 },
         }),
 
         // Seção 3
         new Paragraph({
-          text: '3. FUNDAMENTAÇÃO DA QUANTIDADE',
-          heading: HeadingLevel.HEADING_2,
+          children: [
+            new TextRun({ text: '3. FUNDAMENTAÇÃO DA QUANTIDADE', bold: true, font: 'Arial', color: '000000' }),
+          ],
           spacing: { before: 240, after: 120 },
         }),
         new Paragraph({
-          text: data.fundamentacaoQuantidade || 'Não informado',
+          children: [
+            new TextRun({ text: data.fundamentacaoQuantidade || 'Não informado', font: 'Arial', color: '000000' }),
+          ],
           spacing: { after: 240 },
         }),
 
         // Seção 4
         new Paragraph({
-          text: '4. REQUISITOS ESSENCIAIS DA CONTRATAÇÃO',
-          heading: HeadingLevel.HEADING_2,
+          children: [
+            new TextRun({ text: '4. REQUISITOS ESSENCIAIS DA CONTRATAÇÃO', bold: true, font: 'Arial', color: '000000' }),
+          ],
           spacing: { before: 240, after: 120 },
         }),
         new Paragraph({
-          text: data.requisitosEssenciais || 'Não informado',
+          children: [
+            new TextRun({ text: data.requisitosEssenciais || 'Não informado', font: 'Arial', color: '000000' }),
+          ],
           spacing: { after: 240 },
         }),
 
         // Seção 5
         new Paragraph({
-          text: '5. GRAU DE PRIORIDADE',
-          heading: HeadingLevel.HEADING_2,
+          children: [
+            new TextRun({ text: '5. GRAU DE PRIORIDADE', bold: true, font: 'Arial', color: '000000' }),
+          ],
           spacing: { before: 240, after: 120 },
         }),
         new Paragraph({
-          text: data.grauPrioridade || 'Não informado',
+          children: [
+            new TextRun({ text: data.grauPrioridade || 'Não informado', font: 'Arial', color: '000000' }),
+          ],
           spacing: { after: 240 },
         }),
 
         // Seção 6
         new Paragraph({
-          text: '6. PRAZO NECESSÁRIO PARA ENTREGA',
-          heading: HeadingLevel.HEADING_2,
+          children: [
+            new TextRun({ text: '6. PRAZO NECESSÁRIO PARA ENTREGA', bold: true, font: 'Arial', color: '000000' }),
+          ],
           spacing: { before: 240, after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Data Limite: ', bold: true }),
-            new TextRun(formatDateBR(data.prazoNecessario) || 'Não informado'),
+            new TextRun({ text: 'Data Limite: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: formatDateBR(data.prazoNecessario) || 'Não informado', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Observações: ', bold: true }),
-            new TextRun(data.prazoObservacao || 'Não informado'),
+            new TextRun({ text: 'Observações: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.prazoObservacao || 'Não informado', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 240 },
         }),
 
         // Seção 7
         new Paragraph({
-          text: '7. DOTAÇÃO ORÇAMENTÁRIA',
-          heading: HeadingLevel.HEADING_2,
+          children: [
+            new TextRun({ text: '7. DOTAÇÃO ORÇAMENTÁRIA', bold: true, font: 'Arial', color: '000000' }),
+          ],
           spacing: { before: 240, after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Dotação: ', bold: true }),
-            new TextRun(data.dotacaoOrcamentaria || 'Não informado'),
+            new TextRun({ text: 'Dotação: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.dotacaoOrcamentaria || 'Não informado', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Valor Estimado: R$ ', bold: true }),
-            new TextRun(data.valorEstimado || 'Não informado'),
+            new TextRun({ text: 'Valor Estimado: R$ ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.valorEstimado || 'Não informado', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 120 },
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: 'Fonte de Recurso: ', bold: true }),
-            new TextRun(data.fonteRecurso || 'Não informado'),
+            new TextRun({ text: 'Fonte de Recurso: ', bold: true, font: 'Arial', color: '000000' }),
+            new TextRun({ text: data.fonteRecurso || 'Não informado', font: 'Arial', color: '000000' }),
           ],
           spacing: { after: 480 },
         }),
 
         // Assinatura
         new Paragraph({
-          text: '___________________________________________',
+          children: [
+            new TextRun({
+              text: '___________________________________________',
+              font: 'Arial',
+              color: '000000',
+            }),
+          ],
           alignment: AlignmentType.CENTER,
           spacing: { before: 480, after: 60 },
         }),
         new Paragraph({
-          text: data.nomeOrdenadorDespesa || 'Ordenador de Despesa',
+          children: [
+            new TextRun({
+              text: data.nomeOrdenadorDespesa || 'Ordenador de Despesa',
+              font: 'Arial',
+              color: '000000',
+              bold: true,
+            }),
+          ],
           alignment: AlignmentType.CENTER,
           spacing: { after: 60 },
         }),
         new Paragraph({
-          text: 'Ordenador de Despesa',
+          children: [
+            new TextRun({
+              text: 'Ordenador de Despesa',
+              font: 'Arial',
+              color: '000000',
+            }),
+          ],
           alignment: AlignmentType.CENTER,
         }),
       ],
