@@ -1,4 +1,4 @@
-import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, BorderStyle, Table, TableCell, TableRow, Image as DocxImage } from 'docx';
+import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, BorderStyle } from 'docx';
 import type { DFDFormData } from '@/types/dfd';
 import html2pdf from 'html2pdf.js';
 
@@ -9,130 +9,8 @@ function formatDateBR(dateString: string): string {
   return `${day}/${month}/${year}`;
 }
 
-// Função para carregar a logo como base64
-async function getLogoAsBase64(): Promise<string> {
-  try {
-    const response = await fetch('/logo_sao_carlos_transp.png');
-    const blob = await response.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result as string;
-        resolve(base64.split(',')[1]); // Remove o prefixo "data:image/png;base64,"
-      };
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    console.error('Erro ao carregar logo:', error);
-    return '';
-  }
-}
-
 // Gerar documento DOCX
 export async function generateDOCX(data: DFDFormData): Promise<Blob> {
-  // Tentar carregar a logo
-  let logoElement = null;
-  try {
-    const logoBase64 = await getLogoAsBase64();
-    if (logoBase64) {
-      logoElement = new DocxImage({
-        data: logoBase64,
-        transformation: {
-          width: 150,
-          height: 150,
-        },
-      });
-    }
-  } catch (error) {
-    console.error('Erro ao carregar logo:', error);
-  }
-
-  const headerElements: any[] = [];
-  
-  if (logoElement) {
-    // Cabeçalho com logo à esquerda e texto à direita
-    headerElements.push(
-      new Table({
-        width: { size: 100, type: 'pct' },
-        rows: [
-          new TableRow({
-            cells: [
-              new TableCell({
-                width: { size: 20, type: 'pct' },
-                margins: { top: 0, bottom: 0, left: 100, right: 100 },
-                children: [
-                  new Paragraph({
-                    children: [logoElement],
-                    alignment: AlignmentType.CENTER,
-                  }),
-                ],
-              }),
-              new TableCell({
-                width: { size: 80, type: 'pct' },
-                margins: { top: 0, bottom: 0, left: 100, right: 100 },
-                children: [
-                  new Paragraph({
-                    text: 'PREFEITURA MUNICIPAL DE SÃO CARLOS',
-                    heading: HeadingLevel.HEADING_1,
-                    alignment: AlignmentType.CENTER,
-                    spacing: { after: 60 },
-                  }),
-                  new Paragraph({
-                    text: 'São Carlos, capital da tecnologia',
-                    alignment: AlignmentType.CENTER,
-                    spacing: { after: 60 },
-                  }),
-                  new Paragraph({
-                    text: `Secretaria Municipal de ${data.nomeSecretariaCabecalho || ''}`,
-                    alignment: AlignmentType.CENTER,
-                    spacing: { after: 0 },
-                  }),
-                ],
-              }),
-            ],
-          }),
-        ],
-      })
-    );
-  } else {
-    // Cabeçalho sem logo (fallback)
-    headerElements.push(
-      new Paragraph({
-        text: 'PREFEITURA MUNICIPAL DE SÃO CARLOS',
-        heading: HeadingLevel.HEADING_1,
-        alignment: AlignmentType.CENTER,
-        spacing: { after: 120 },
-      }),
-      new Paragraph({
-        text: 'São Carlos, capital da tecnologia',
-        alignment: AlignmentType.CENTER,
-        spacing: { after: 120 },
-      }),
-      new Paragraph({
-        text: `Secretaria Municipal de ${data.nomeSecretariaCabecalho || ''}`,
-        alignment: AlignmentType.CENTER,
-        spacing: { after: 240 },
-      })
-    );
-  }
-
-  headerElements.push(
-    new Paragraph({
-      text: 'DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA (DFD)',
-      heading: HeadingLevel.HEADING_1,
-      alignment: AlignmentType.CENTER,
-      spacing: { after: 240, before: 120 },
-      border: {
-        bottom: {
-          color: '000000',
-          space: 1,
-          style: BorderStyle.SINGLE,
-          size: 6,
-        },
-      },
-    })
-  );
-
   const doc = new Document({
     sections: [{
       properties: {
@@ -146,7 +24,37 @@ export async function generateDOCX(data: DFDFormData): Promise<Blob> {
         },
       },
       children: [
-        ...headerElements,
+        // Cabeçalho
+        new Paragraph({
+          text: 'PREFEITURA MUNICIPAL DE SÃO CARLOS',
+          heading: HeadingLevel.HEADING_1,
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 120 },
+        }),
+        new Paragraph({
+          text: 'São Carlos, capital da tecnologia',
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 120 },
+        }),
+        new Paragraph({
+          text: `Secretaria Municipal de ${data.nomeSecretariaCabecalho || ''}`,
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 240 },
+        }),
+        new Paragraph({
+          text: 'DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA (DFD)',
+          heading: HeadingLevel.HEADING_1,
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 240 },
+          border: {
+            bottom: {
+              color: '000000',
+              space: 1,
+              style: BorderStyle.SINGLE,
+              size: 6,
+            },
+          },
+        }),
 
         // Informações básicas
         new Paragraph({
