@@ -159,6 +159,7 @@ function App() {
             <div className="text-center md:text-right text-xs text-slate-400">
               <p>Sistema DFD - Documento de Formalização de Demanda</p>
               <p>© {new Date().getFullYear()} - Todos os direitos reservados</p>
+              <p className="text-slate-500 mt-2">Desenvolvido por Caio Yamazaki Saravalle</p>
             </div>
           </div>
         </div>
