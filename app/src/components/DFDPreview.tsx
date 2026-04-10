@@ -91,25 +91,27 @@ export function DFDPreview({ data, isOpen, onClose }: DFDPreviewProps) {
         {/* Conteúdo do Documento */}
         <div id="dfd-preview-content" className="p-8 bg-white">
           {/* Cabeçalho Institucional */}
-          <div className="text-center border-b-2 border-black pb-6 mb-6">
-            <div className="flex justify-center mb-4">
-              {/* Logo Placeholder */}
-              <div className="w-20 h-20 bg-slate-100 border-2 border-slate-300 rounded-full flex items-center justify-center">
-                <svg viewBox="0 0 100 100" className="w-16 h-16">
-                  <circle cx="50" cy="50" r="45" fill="none" stroke="#1e40af" strokeWidth="2"/>
-                  <text x="50" y="35" textAnchor="middle" fontSize="10" fill="#1e40af" fontWeight="bold">PREFEITURA</text>
-                  <text x="50" y="50" textAnchor="middle" fontSize="12" fill="#1e40af" fontWeight="bold">SÃO</text>
-                  <text x="50" y="65" textAnchor="middle" fontSize="12" fill="#1e40af" fontWeight="bold">CARLOS</text>
-                </svg>
+          <div className="border-b-2 border-black pb-6 mb-6">
+            <div className="flex gap-6 items-start">
+              {/* Logo */}
+              <div className="flex-shrink-0">
+                <img 
+                  src="/logo_sao_carlos_transp.png" 
+                  alt="Logo Prefeitura de São Carlos" 
+                  className="h-24 w-auto"
+                />
+              </div>
+              {/* Texto do Cabeçalho */}
+              <div className="flex-1 text-center py-2">
+                <h1 className="text-lg font-bold text-slate-900">PREFEITURA MUNICIPAL DE SÃO CARLOS</h1>
+                <p className="text-sm text-slate-600">São Carlos, capital da tecnologia</p>
+                <p className="text-sm font-semibold text-slate-900 mt-2">
+                  Secretaria Municipal de {data.nomeSecretariaCabecalho || '_____________'}
+                </p>
               </div>
             </div>
-            <h1 className="text-lg font-bold text-slate-900">PREFEITURA MUNICIPAL DE SÃO CARLOS</h1>
-            <p className="text-sm text-slate-600">São Carlos, capital da tecnologia</p>
-            <p className="text-sm font-semibold text-slate-900 mt-2">
-              Secretaria Municipal de {data.nomeSecretariaCabecalho || '_____________'}
-            </p>
             <div className="mt-4 pt-4 border-t border-slate-300">
-              <h2 className="text-base font-bold text-slate-900 uppercase">
+              <h2 className="text-base font-bold text-slate-900 text-center uppercase">
                 Documento de Formalização de Demanda (DFD)
               </h2>
             </div>
