@@ -1,4 +1,4 @@
-import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, BorderStyle } from 'docx';
+import { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle } from 'docx';
 import type { DFDFormData } from '@/types/dfd';
 import html2pdf from 'html2pdf.js';
 
