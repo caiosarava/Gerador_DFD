@@ -468,7 +468,7 @@ export function DFDForm({ onPreview }: DFDFormProps) {
           )}
         </Button>
         <Button
-          onClick={handleExportPDF}
+          onClick={() => onPreview(formData)}
           disabled={isGenerating !== null}
           className="gap-2 bg-red-600 hover:bg-red-700"
         >
