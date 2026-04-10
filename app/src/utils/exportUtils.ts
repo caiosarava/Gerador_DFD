@@ -218,12 +218,12 @@ export async function generateDOCX(data: DFDFormData): Promise<Blob> {
           spacing: { before: 480, after: 60 },
         }),
         new Paragraph({
-          text: data.responsavel || 'Responsável',
+          text: data.nomeOrdenadorDespesa || 'Ordenador de Despesa',
           alignment: AlignmentType.CENTER,
           spacing: { after: 60 },
         }),
         new Paragraph({
-          text: data.departamento || 'Departamento',
+          text: 'Ordenador de Despesa',
           alignment: AlignmentType.CENTER,
         }),
       ],
@@ -274,10 +274,10 @@ export function downloadDOCX(blob: Blob, filename: string): void {
 // Calcular progresso do formulário
 export function calculateProgress(data: DFDFormData): number {
   const requiredFields: (keyof DFDFormData)[] = [
-    'numeroDFD', 'data', 'secretaria', 'departamento', 'responsavel',
+    'nomeSecretariaCabecalho', 'numeroDFD', 'data', 'secretaria', 'departamento', 'responsavel',
     'telefone', 'email', 'descricaoObjeto', 'justificativaDemanda',
     'fundamentacaoQuantidade', 'requisitosEssenciais', 'grauPrioridade',
-    'prazoNecessario', 'dotacaoOrcamentaria', 'valorEstimado', 'fonteRecurso'
+    'prazoNecessario', 'dotacaoOrcamentaria', 'valorEstimado', 'nomeOrdenadorDespesa', 'fonteRecurso'
   ];
 
   const filledFields = requiredFields.filter(field => {

@@ -282,8 +282,8 @@ export function DFDPreview({ data, isOpen, onClose }: DFDPreviewProps) {
           {/* Assinatura */}
           <div className="mt-12 pt-8 text-center">
             <div className="border-t border-black w-80 mx-auto pt-4">
-              <p className="font-bold text-sm">{data.responsavel || '_________________________________'}</p>
-              <p className="text-sm text-slate-600">{data.departamento || 'Departamento/Setor'}</p>
+              <p className="font-bold text-sm">{data.nomeOrdenadorDespesa || '_________________________________'}</p>
+              <p className="text-sm text-slate-600">Ordenador de Despesa</p>
             </div>
           </div>
 
