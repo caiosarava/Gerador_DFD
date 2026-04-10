@@ -233,11 +233,108 @@ export async function generateDOCX(data: DFDFormData): Promise<Blob> {
   return await Packer.toBlob(doc);
 }
 
+// Gerar HTML do documento
+function generateDocumentHTML(data: DFDFormData): string {
+  const logoImg = '<img src="/logo_sao_carlos_transp.png" alt="Logo" style="height: 100px; width: auto;" />';
+  
+  return `
+    <div style="padding: 40px; font-family: Arial, sans-serif; line-height: 1.5;">
+      <!-- Cabeçalho -->
+      <div style="display: flex; gap: 20px; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 30px; margin-bottom: 30px;">
+        <div style="flex-shrink: 0;">
+          ${logoImg}
+        </div>
+        <div style="flex: 1; text-align: center;">
+          <h1 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;">PREFEITURA MUNICIPAL DE SÃO CARLOS</h1>
+          <p style="font-size: 12px; color: #333; margin: 0 0 10px 0;">São Carlos, capital da tecnologia</p>
+          <p style="font-size: 12px; font-weight: bold; margin: 0;">Secretaria Municipal de ${data.nomeSecretariaCabecalho || ''}</p>
+        </div>
+      </div>
+
+      <h2 style="text-align: center; font-size: 16px; margin: 0 0 30px 0; border-top: 1px solid #ccc; padding-top: 15px;">DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA (DFD)</h2>
+
+      <!-- Informações Básicas -->
+      <div style="margin-bottom: 20px; font-size: 12px;">
+        <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">Nº DFD:</span><span style="flex: 1; border-bottom: 1px solid #000;">${data.numeroDFD || '__________'}</span></div>
+        <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">Data:</span><span style="flex: 1; border-bottom: 1px solid #000;">${formatDateBR(data.data)}</span></div>
+        <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">Secretaria/Órgão:</span><span style="flex: 1; border-bottom: 1px solid #000;">${data.secretaria || '__________'}</span></div>
+        <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">Departamento:</span><span style="flex: 1; border-bottom: 1px solid #000;">${data.departamento || '__________'}</span></div>
+        <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">Responsável:</span><span style="flex: 1; border-bottom: 1px solid #000;">${data.responsavel || '__________'}</span></div>
+        <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">Telefone:</span><span style="flex: 1; border-bottom: 1px solid #000;">${data.telefone || '__________'}</span></div>
+        <div style="display: flex;"><span style="font-weight: bold; width: 150px;">E-mail:</span><span style="flex: 1; border-bottom: 1px solid #000;">${data.email || '__________'}</span></div>
+      </div>
+
+      <!-- Seção 1 -->
+      <h3 style="background-color: #f0f0f0; padding: 8px; margin: 20px 0 10px 0; border-left: 4px solid #2563eb; font-size: 12px;">1. DESCRIÇÃO DO OBJETO</h3>
+      <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px; font-size: 12px; min-height: 60px; white-space: pre-wrap;">${data.descricaoObjeto || '<span style="color: #999;">Não informado</span>'}</div>
+
+      <!-- Seção 2 -->
+      <h3 style="background-color: #f0f0f0; padding: 8px; margin: 20px 0 10px 0; border-left: 4px solid #9333ea; font-size: 12px;">2. JUSTIFICATIVA DA DEMANDA</h3>
+      <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px; font-size: 12px; min-height: 60px; white-space: pre-wrap;">${data.justificativaDemanda || '<span style="color: #999;">Não informado</span>'}</div>
+
+      <!-- Seção 3 -->
+      <h3 style="background-color: #f0f0f0; padding: 8px; margin: 20px 0 10px 0; border-left: 4px solid #ea580c; font-size: 12px;">3. FUNDAMENTAÇÃO DA QUANTIDADE</h3>
+      <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px; font-size: 12px; min-height: 60px; white-space: pre-wrap;">${data.fundamentacaoQuantidade || '<span style="color: #999;">Não informado</span>'}</div>
+
+      <!-- Seção 4 -->
+      <h3 style="background-color: #f0f0f0; padding: 8px; margin: 20px 0 10px 0; border-left: 4px solid #4f46e5; font-size: 12px;">4. REQUISITOS ESSENCIAIS DA CONTRATAÇÃO</h3>
+      <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px; font-size: 12px; min-height: 60px; white-space: pre-wrap;">${data.requisitosEssenciais || '<span style="color: #999;">Não informado</span>'}</div>
+
+      <!-- Seção 5 -->
+      <h3 style="background-color: #f0f0f0; padding: 8px; margin: 20px 0 10px 0; border-left: 4px solid #dc2626; font-size: 12px;">5. GRAU DE PRIORIDADE</h3>
+      <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px; font-size: 12px;">
+        ${data.grauPrioridade ? `<span style="display: inline-block; padding: 4px 12px; border-radius: 4px; font-weight: bold; ${
+          data.grauPrioridade === 'Alta' ? 'background-color: #fee2e2; color: #991b1b;' :
+          data.grauPrioridade === 'Média' ? 'background-color: #fef3c7; color: #92400e;' :
+          'background-color: #dcfce7; color: #166534;'
+        }">${data.grauPrioridade}</span>` : '<span style="color: #999;">Não informado</span>'}
+      </div>
+
+      <!-- Seção 6 -->
+      <h3 style="background-color: #f0f0f0; padding: 8px; margin: 20px 0 10px 0; border-left: 4px solid #b45309; font-size: 12px;">6. PRAZO NECESSÁRIO PARA ENTREGA</h3>
+      <div style="margin-bottom: 20px; font-size: 12px;">
+        <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">Data Limite:</span><span style="flex: 1; border-bottom: 1px solid #000;">${formatDateBR(data.prazoNecessario)}</span></div>
+        <div style="border: 1px solid #ddd; padding: 10px; min-height: 40px; white-space: pre-wrap;">${data.prazoObservacao || '<span style="color: #999;">Não informado</span>'}</div>
+      </div>
+
+      <!-- Seção 7 -->
+      <h3 style="background-color: #f0f0f0; padding: 8px; margin: 20px 0 10px 0; border-left: 4px solid #059669; font-size: 12px;">7. DOTAÇÃO ORÇAMENTÁRIA</h3>
+      <div style="margin-bottom: 30px; font-size: 12px;">
+        <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">Dotação:</span><span style="flex: 1; border-bottom: 1px solid #000; font-family: monospace;">${data.dotacaoOrcamentaria || '__________'}</span></div>
+        <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">Valor Estimado:</span><span style="flex: 1; border-bottom: 1px solid #000;">R$ ${data.valorEstimado || '__________'}</span></div>
+        <div style="display: flex;"><span style="font-weight: bold; width: 150px;">Fonte de Recurso:</span><span style="flex: 1; border-bottom: 1px solid #000;">${data.fonteRecurso || '__________'}</span></div>
+      </div>
+
+      <!-- Assinatura -->
+      <div style="text-align: center; margin-top: 60px;">
+        <div style="border-top: 1px solid #000; width: 300px; margin: 0 auto; padding-top: 20px;">
+          <p style="font-weight: bold; margin: 0; font-size: 12px;">${data.nomeOrdenadorDespesa || '_________________________________'}</p>
+          <p style="color: #666; margin: 0; font-size: 11px;">Ordenador de Despesa</p>
+        </div>
+      </div>
+
+      <!-- Rodapé -->
+      <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 10px; color: #666;">
+        <p style="margin: 0;">Documento de Formalização de Demanda - Prefeitura Municipal de São Carlos/SP</p>
+        <p style="margin: 0;">Gerado em: ${new Date().toLocaleDateString('pt-BR')}</p>
+      </div>
+    </div>
+  `;
+}
+
 // Gerar PDF a partir do HTML
 export async function generatePDF(data: DFDFormData): Promise<void> {
-  const element = document.getElementById('dfd-preview-content');
+  // Tentar usar o elemento do preview se existir, senão gerar HTML
+  let element = document.getElementById('dfd-preview-content');
+  
   if (!element) {
-    throw new Error('Elemento de preview não encontrado');
+    // Criar um elemento temporário com o HTML gerado
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = generateDocumentHTML(data);
+    tempDiv.id = 'temp-pdf-content';
+    tempDiv.style.display = 'none';
+    document.body.appendChild(tempDiv);
+    element = tempDiv;
   }
 
   const opt = {
@@ -256,8 +353,14 @@ export async function generatePDF(data: DFDFormData): Promise<void> {
     }
   };
 
-  await html2pdf().set(opt).from(element).save();
-}
+  try {
+    await html2pdf().set(opt).from(element).save();
+  } finally {
+    // Limpar elemento temporário se foi criado
+    if (element.id === 'temp-pdf-content') {
+      document.body.removeChild(element);
+    }
+  }
 
 // Download do arquivo DOCX
 export function downloadDOCX(blob: Blob, filename: string): void {
