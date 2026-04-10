@@ -361,6 +361,7 @@ export async function generatePDF(data: DFDFormData): Promise<void> {
       document.body.removeChild(element);
     }
   }
+}
 
 // Download do arquivo DOCX
 export function downloadDOCX(blob: Blob, filename: string): void {
