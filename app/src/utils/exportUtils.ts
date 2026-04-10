@@ -75,6 +75,13 @@ export async function generateDOCX(data: DFDFormData): Promise<Blob> {
           alignment: AlignmentType.CENTER,
           spacing: { after: 240 },
           border: {
+            bottom: {
+              color: '000000',
+              space: 1,
+              style: BorderStyle.SINGLE,
+              size: 6,
+            },
+          },
         }),
 
         // Informações básicas
