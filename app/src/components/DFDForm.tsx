@@ -10,7 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import type { DFDFormData } from '@/types/dfd';
 import { initialFormData, exampleData, formSections } from '@/types/dfd';
-import { generateDOCX, generatePDF, downloadDOCX, calculateProgress } from '@/utils/exportUtils';
+import { generateDOCX, downloadDOCX, calculateProgress } from '@/utils/exportUtils';
 import { 
   FileText, 
   Eye, 
@@ -71,23 +71,6 @@ export function DFDForm({ onPreview }: DFDFormProps) {
       toast.success('Documento DOCX gerado com sucesso!');
     } catch (error) {
       toast.error('Erro ao gerar documento. Tente novamente.');
-    } finally {
-      setIsGenerating(null);
-    }
-  };
-
-  const handleExportPDF = async () => {
-    if (progress < 50) {
-      toast.error('Preencha pelo menos 50% do formulário antes de exportar.');
-      return;
-    }
-    
-    try {
-      setIsGenerating('pdf');
-      await generatePDF(formData);
-      toast.success('Documento PDF gerado com sucesso!');
-    } catch (error) {
-      toast.error('Erro ao gerar PDF. Tente novamente.');
     } finally {
       setIsGenerating(null);
     }
