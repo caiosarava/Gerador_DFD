@@ -42,7 +42,7 @@ function App() {
             <div className="flex items-center gap-4">
               {/* Logo */}
               <div className="w-16 h-16 flex items-center justify-center shadow-md rounded">
-                <img src="/logo_sao_carlos_transp1.png" alt="Logo São Carlos" className="w-full h-full object-contain" />
+                <img src="/logo_sao_carlos_branco.png" alt="Logo São Carlos" className="w-full h-full object-contain" />
               </div>
               <div>
                 <h1 className="text-xl md:text-2xl font-bold">Prefeitura Municipal de São Carlos</h1>
