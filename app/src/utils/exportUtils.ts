@@ -1,4 +1,4 @@
-import { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle } from 'docx';
+import { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle, Table, TableCell, TableRow, WidthType, VerticalAlign, ImageRun } from 'docx';
 import type { DFDFormData } from '@/types/dfd';
 import html2pdf from 'html2pdf.js';
 
@@ -9,8 +9,92 @@ function formatDateBR(dateString: string): string {
   return `${day}/${month}/${year}`;
 }
 
+// Função para buscar imagem e converter em base64
+async function getLogoBase64(): Promise<string> {
+  try {
+    const response = await fetch('/logo_sao_carlos_transp.png');
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result as string;
+        resolve(base64.split(',')[1]);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Erro ao carregar logo:', error);
+    return '';
+  }
+}
+
 // Gerar documento DOCX
 export async function generateDOCX(data: DFDFormData): Promise<Blob> {
+  const logoBase64 = await getLogoBase64();
+  
+  const headerTable = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
+        children: [
+          // Coluna com logo
+          new TableCell({
+            width: { size: 20, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: logoBase64 ? [
+                  new ImageRun({
+                    type: 'png',
+                    data: logoBase64,
+                    transformation: {
+                      width: 80,
+                      height: 80,
+                    },
+                  }),
+                ] : [new TextRun('')],
+                alignment: AlignmentType.CENTER,
+              }),
+            ],
+            verticalAlign: VerticalAlign.CENTER,
+            borders: {
+              top: { style: BorderStyle.NONE },
+              bottom: { style: BorderStyle.NONE },
+              left: { style: BorderStyle.NONE },
+              right: { style: BorderStyle.NONE },
+            },
+          }),
+          // Coluna com texto
+          new TableCell({
+            width: { size: 80, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: 'PREFEITURA MUNICIPAL DE SÃO CARLOS',
+                    bold: true,
+                    size: 28,
+                    font: 'Arial',
+                    color: '000000',
+                  }),
+                ],
+                alignment: AlignmentType.CENTER,
+                spacing: { after: 120 },
+              }),
+            ],
+            verticalAlign: VerticalAlign.CENTER,
+            borders: {
+              top: { style: BorderStyle.NONE },
+              bottom: { style: BorderStyle.NONE },
+              left: { style: BorderStyle.NONE },
+              right: { style: BorderStyle.NONE },
+            },
+          }),
+        ],
+      }),
+    ],
+  });
+
   const doc = new Document({
     sections: [{
       properties: {
@@ -24,18 +108,10 @@ export async function generateDOCX(data: DFDFormData): Promise<Blob> {
         },
       },
       children: [
-        // Cabeçalho
+        // Cabeçalho com logo
+        headerTable,
         new Paragraph({
-          children: [
-            new TextRun({
-              text: 'PREFEITURA MUNICIPAL DE SÃO CARLOS',
-              bold: true,
-              size: 28, // 14pt = 28 half-points
-              font: 'Arial',
-              color: '000000',
-            }),
-          ],
-          alignment: AlignmentType.CENTER,
+          text: '',
           spacing: { after: 120 },
         }),
         new Paragraph({
