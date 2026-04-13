@@ -41,13 +41,8 @@ function App() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               {/* Logo */}
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md">
-                <svg viewBox="0 0 100 100" className="w-12 h-12">
-                  <circle cx="50" cy="50" r="45" fill="none" stroke="#1e40af" strokeWidth="2"/>
-                  <text x="50" y="35" textAnchor="middle" fontSize="10" fill="#1e40af" fontWeight="bold">PREFEITURA</text>
-                  <text x="50" y="50" textAnchor="middle" fontSize="12" fill="#1e40af" fontWeight="bold">SÃO</text>
-                  <text x="50" y="65" textAnchor="middle" fontSize="12" fill="#1e40af" fontWeight="bold">CARLOS</text>
-                </svg>
+              <div className="w-16 h-16 flex items-center justify-center shadow-md rounded">
+                <img src="/logo_sao_carlos_transp.png" alt="Logo São Carlos" className="w-full h-full object-contain" />
               </div>
               <div>
                 <h1 className="text-xl md:text-2xl font-bold">Prefeitura Municipal de São Carlos</h1>
